@@ -10,25 +10,27 @@
 
 #The gpiozero module is used to create an instance of LED on GPIO port 17.
 #It necessary to hook up an led with a current limiting resistor on that pin.
-#Created by Greg Hoke on 5/12/2017 as an assignment for an RPi 
-#Physical Computing Course. Feel free to use and modify.
+#Created by Greg Hoke on 5/12/2017 as an assignment for an RPi Physical Computing
+#Course. Feel free to modify and use.
 #Updated 5/14/2017 to add sound via Pygame
-#
 #Make sure to pick up the sound files dit.wav and dah.wav
 #The tones were generated with Audacity. They are 1000 Hz.
 #The dit tone last for 100 msec and the dah tone for 300 msec.
+
 #Dit.wav and dah.wav must be placed in the same folder as morse.py
-#
-#Further projects might be to use either a microphone or a light detector 
-$to read interpret the morse code, formaing a closed loop communications system
+
+#A neat project would be to use a light detector to read 
+#the morse code - a closed loop communications system
+
+
 
 """
 import pygame, sys
 from gpiozero import LED
-from time import sleep
+from time import sleep, time
 from pygame.locals import *
 
-led = LED(17)
+led = LED(23)
 
 di_time = 0.10 # sec
 dah_time = 3*di_time
@@ -57,11 +59,11 @@ def is_integer(s):
 
 DEBUG = False
 repeat = 1
-message = "SOS."
 message=".,,?!:'="
+message = "SOS"
 rflag = False 
 #message = "Now is the time for all good men (and women) \
-#           to come to the aid of their country"
+#to come to the aid of their country"
 
 SOUND = True  # sound can be suppressed with -ns option   
 if len(sys.argv) > 1 :
@@ -135,13 +137,14 @@ while count >= 1 :
     for i in range(len(encrypted)) :
         
         if ( encrypted[i] == space ) :
-            sleep(inter_word_time)
+            if ( DEBUG ) :
+                print("sleep %g" % (inter_word_time))      
+            sleep(inter_word_time) # long pause for blank between words
             continue
         
         sys.stdout.write(encrypted[i]) # suppress newlines
         sys.stdout.write(' ')
         sys.stdout.flush()
-        
         
         for j in range(len(encrypted[i]) ) :
             
@@ -149,23 +152,21 @@ while count >= 1 :
                 led.on()
                 if ( SOUND ) :
                     SOUNDS['dit'].play()
-                sleep(di_time)
+                sleep(di_time)# let the di tone file play
                 led.off()
-                sleep(di_time)
+                sleep(di_time) #short pause between symbols
             if ( encrypted[i][j] == '-' ) :
-                #led.blink(dah_time,di_time,1)
                 led.on()
                 if ( SOUND ) :
                     SOUNDS['dah'].play()
-                sleep(dah_time)
+                sleep(dah_time)# let the dah tone file play
                 led.off()
-                sleep(di_time)
-
-        sleep(intra_char_time)
+                sleep(di_time) # short pause between symbols
+        sleep(intra_char_time-di_time) # longer pause between letters
     
-    
-    sleep(inter_word_time)
-
     count -= 1
+    sleep(inter_word_time)
+    if ( DEBUG ) :
+        print("sleep %g" % (inter_word_time)) # long pause before repeat
 
 print()
