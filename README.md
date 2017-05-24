@@ -31,3 +31,16 @@ multiple word messages must be within quotes
 -d cause verbose output to be printed
 -r N causes a message to repeat N times
 
+# ldrDetect.py attempt to detect morse code from a flashing LED
+# It is  shamelessly modified version of ldrTest.py obtained from
+# https://pimylifeup.com/raspberry-pi-light-sensor
+# The morse code message is converted to letters when the
+# user hits ctrl-C. Run this command in one window while
+# morse.py is sending a message.
+# With the DEBUG flag set to True a lot messages get printed
+# out which adversely affects detection accuracy.
+
+See ldrDetect.py comments for more details on LED's, capacitor, etc
+
+For a video of this project: https://goo.gl/photos/XdSyTeLywDmNUaM69
+
